@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SafePrescribe | Decentralized Pharmacy Ledger</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
+        .gradient-bg { background: linear-gradient(135deg, #0f172a 0%, #334155 100%); }
+    </style>
+</head>
+<body class="min-h-screen border-t-8 border-cyan-500">
+
+    <nav class="bg-white border-b border-slate-200 py-4 px-8 shadow-sm">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <span class="text-3xl">🛡️</span>
+                <h1 class="text-xl font-extrabold text-slate-800 tracking-tight">SafePrescribe <span class="text-cyan-600">Protocol</span></h1>
+            </div>
+            <button id="connectWallet" class="bg-slate-900 hover:bg-slate-800 text-white px-6 py-2.5 rounded-full text-sm font-semibold transition flex items-center gap-2">
+                Connect Health Wallet
+            </button>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto p-8 grid lg:grid-cols-12 gap-10">
+        
+        <!-- Sidebar: Doctor Portal -->
+        <div class="lg:col-span-4 space-y-6">
+            <section class="bg-white p-8 rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100">
+                <div class="flex items-center gap-2 mb-6">
+                    <span class="p-2 bg-cyan-100 text-cyan-700 rounded-lg">🩺</span>
+                    <h2 class="font-bold text-slate-800">Doctor Portal</h2>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Patient ID Hash</label>
+                        <input type="text" id="patientHash" placeholder="Auto-generated" readonly class="w-full mt-1 p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono">
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Medication</label>
+                        <select id="medName" class="w-full mt-1 p-3 bg-white border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-cyan-500 transition">
+                            <option>Amoxicillin 500mg</option>
+                            <option>Insulin Glargine 100U</option>
+                            <option>Lisinopril 10mg</option>
+                            <option>Metformin 850mg</option>
+                        </select>
+                    </div>
+                    <button onclick="issuePrescription()" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-4 rounded-2xl shadow-lg shadow-cyan-200 transition-all active:scale-95">
+                        Issue On-Chain Prescription
+                    </button>
+                </div>
+            </section>
+        </div>
+
+        <!-- Main: Pharmacy Verification -->
+        <div class="lg:col-span-8 space-y-6">
+            <section class="bg-white rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100 overflow-hidden">
+                <div class="bg-slate-50 p-6 border-b border-slate-100 flex justify-between items-center">
+                    <h3 class="font-bold text-slate-800 flex items-center gap-2">
+                        <span>💊</span> Pharmacist Verification Queue
+                    </h3>
+                    <div class="flex gap-2">
+                        <span class="px-3 py-1 bg-emerald-100 text-emerald-700 text-[10px] font-bold rounded-full">LIVE LEDGER</span>
+                    </div>
+                </div>
+                
+                <div class="p-6">
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="text-[10px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100">
+                                <th class="pb-4">TX Hash</th>
+                                <th class="pb-4">Patient</th>
+                                <th class="pb-4">Medication</th>
+                                <th class="pb-4">Status</th>
+                                <th class="pb-4 text-right">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="txQueue" class="text-sm">
+                            <!-- Injected by app.js -->
+                        </tbody>
+                    </table>
+                    
+                    <div id="emptyState" class="py-20 text-center">
+                        <div class="text-4xl mb-4">🗂️</div>
+                        <p class="text-slate-400 font-medium">No pending prescriptions in your region.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+    </main>
+
+    <!-- Modal for Tx Success -->
+    <div id="txModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-white max-w-md w-full rounded-3xl p-8 text-center animate-in zoom-in duration-300">
+            <div class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-3xl mx-auto mb-6">✅</div>
+            <h3 class="text-2xl font-bold text-slate-800 mb-2">Prescription Claimed</h3>
+            <p class="text-slate-500 mb-6 text-sm">Haskell validator successfully updated the ledger. This prescription is now VOID at all other pharmacies.</p>
+            <div id="txHashDisplay" class="bg-slate-50 p-3 rounded-xl font-mono text-[10px] text-slate-400 break-all mb-6"></div>
+            <button onclick="closeModal()" class="w-full bg-slate-900 text-white font-bold py-4 rounded-2xl">Return to Queue</button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/lucid-cardano/bundle/lucid.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
