@@ -1,0 +1,12 @@
+{
+  "name": "safeprescribe-dapp",
+  "version": "1.0.0",
+  "description": "Anti-fraud Pharmacy DApp based on Haskell Validation",
+  "main": "index.html",
+  "scripts": {
+    "start": "serve public"
+  },
+  "dependencies": {
+    "serve": "^14.2.0"
+  }
+}
